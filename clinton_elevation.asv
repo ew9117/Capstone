@@ -43,11 +43,11 @@ function clinton_elevation()
 
 
     % create boundry mask
-    % if zq(i,j) has an elevation boundry_mask(i,j) = 1
+    % if zq(i,j) has an elevation bm(i,j) = 1
     % if zq(i,j) does not have an elevation BUT it is adjacent to a cell
-    % with a defined elevation then boundry_mask(i,j) = 0
-    % else zq(i,j) is nan then boundry_mask(i,j) is nan
-    boundry_mask = NaN.*ones(100, 100);
+    % with a defined elevation then bm(i,j) = 0
+    % else zq(i,j)
+    bm = NaN.*ones(100, 100);
     % loop through all points of boundary mask
     for i = 2:99
         for j = 2:99
@@ -57,35 +57,29 @@ function clinton_elevation()
 
                 % is this cell has any neighbors with elevation values
                 if ~isnan(zq(i,j+1))
-                    boundry_mask(i,j) = 0;
+                    bm(i,j) = 0;
                 elseif ~isnan(zq(i,j-1))
-                    boundry_mask(i,j) = 0;
+                    bm(i,j) = 0;
                 elseif ~isnan(zq(i+1,j))
-                    boundry_mask(i,j) = 0;
+                    bm(i,j) = 0;
                 elseif ~isnan(zq(i-1,j))
-                    boundry_mask(i,j) = 0;
+                    bm(i,j) = 0;
                 end
             else
                 % this cell has no elevation data and no neighbors with
                 % elevation data
-                boundry_mask(i,j) = 1;
+                bm(i,j) = 1;
             end
         end
     end
 
-    % initialize water grid post rain
     vq = NaN*ones(100,100);
-
-    % is the boundry mask says that cell can hold water there, put 1 water
-    % there
-    vq(boundry_mask == 1) = 1;
-
-    % initialize water grid post water movement
     wq = NaN*ones(100,100);
 
-    delta_t = 1;
+    vq(bm == 1) = 1;
 
-    save('clinton_elevation_variables')
-
+    save('temp')
+    figure;
+    surf(xq,yq,bm)
 end
 
