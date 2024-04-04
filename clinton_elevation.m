@@ -43,11 +43,11 @@ function clinton_elevation()
 
 
     % create boundry mask
-    % if zq(i,j) has an elevation boundry_mask(i,j) = 1
+    % if zq(i,j) has an elevation boundary_mask(i,j) = 1
     % if zq(i,j) does not have an elevation BUT it is adjacent to a cell
-    % with a defined elevation then boundry_mask(i,j) = 0
-    % else zq(i,j) is nan then boundry_mask(i,j) is nan
-    boundry_mask = NaN.*ones(100, 100);
+    % with a defined elevation then boundary_mask(i,j) = 0
+    % else zq(i,j) is nan then boundary_mask(i,j) is nan
+    boundary_mask = NaN.*ones(100, 100);
     % loop through all points of boundary mask
     for i = 2:99
         for j = 2:99
@@ -57,18 +57,18 @@ function clinton_elevation()
 
                 % is this cell has any neighbors with elevation values
                 if ~isnan(zq(i,j+1))
-                    boundry_mask(i,j) = 0;
+                    boundary_mask(i,j) = 0;
                 elseif ~isnan(zq(i,j-1))
-                    boundry_mask(i,j) = 0;
+                    boundary_mask(i,j) = 0;
                 elseif ~isnan(zq(i+1,j))
-                    boundry_mask(i,j) = 0;
+                    boundary_mask(i,j) = 0;
                 elseif ~isnan(zq(i-1,j))
-                    boundry_mask(i,j) = 0;
+                    boundary_mask(i,j) = 0;
                 end
             else
                 % this cell has no elevation data and no neighbors with
                 % elevation data
-                boundry_mask(i,j) = 1;
+                boundary_mask(i,j) = 1;
             end
         end
     end
@@ -78,14 +78,23 @@ function clinton_elevation()
 
     % is the boundry mask says that cell can hold water there, put 1 water
     % there
-    vq(boundry_mask == 1) = 1;
+    vq(boundary_mask == 1) = 1;
 
     % initialize water grid post water movement
-    wq = NaN*ones(100,100);
+    wq = 0*ones(100,100);
 
     delta_t = 1;
 
-    save('clinton_elevation_variables')
+    % have to find the max elevation change of the viable water 
+    %save('clinton_elevation_variables')
+
+    for i = 1:60
+        vq = dance_round(wq, boundary_mask,vq);
+    end
+    s = surf(xq,yq,zq);
+    s
+    % s.CData = vq;
+    % s
 
 end
 
