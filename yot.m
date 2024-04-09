@@ -1,4 +1,4 @@
-function toy()
+function yot()
 % this function will initialize all the maps and variables needed for thie
 % clinton elevation dataset
     
@@ -7,7 +7,7 @@ function toy()
 
     
     [xq, yq] = meshgrid(dx, dy);
-    z = exp(-(xq.^2 + yq.^2));
+    z = -exp(-(xq.^2 + yq.^2));
     zq = griddata(dx, dy, z, xq, yq);
 
 
@@ -56,7 +56,7 @@ function toy()
     % there
     vq(~isnan(bm)) = 1;
     
-    
+    % vq(40,40)
     
 
     % initialize water grid post water movement
@@ -65,13 +65,17 @@ function toy()
     wq(:,1) = NaN;
     wq(m,:) = NaN;
     wq(:,n) = NaN;
+    size(wq)
+    % pq = 0*ones(m,n);
+    % p2q = 0*ones(m,n);
+    % p2q(40,40) = 1;
     g = steepest(bm,z);
     
     max(g);
     min(g);
     % g = g./3.287;
     for a = 1:10
-    total=0;
+        total=0;
 
         for i = 1:m
             for j = 1:n
@@ -85,6 +89,7 @@ function toy()
         end
         total
         vq = steepest_round(wq, bm, vq, g);
+
 
     end
     figure

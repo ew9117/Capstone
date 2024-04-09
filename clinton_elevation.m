@@ -19,27 +19,27 @@ function clinton_elevation()
 
     % loop through points and remove some based on slope
     % might want to check to see if the slop continues to be steep
-    for i = 2:100
-        for j = 2:100
-            
-            if abs((zq(i,j) - zq(i,j-1))./(yq(j) - yq(j-1))) > 0.75
-                zq(i,j) = NaN;
-            end
-            if abs((zq(i,j) - zq(i - 1,j))/(yq(i) - yq(i - 1))) > 0.75
-                zq(i,j) = NaN;
-            end
-
-        end
-    end
+    % for i = 2:100
+    %     for j = 2:100
+    % 
+    %         if abs((zq(i,j) - zq(i,j-1))./(yq(j) - yq(j-1))) > 0.75
+    %             zq(i,j) = NaN;
+    %         end
+    %         if abs((zq(i,j) - zq(i - 1,j))/(yq(i) - yq(i - 1))) > 0.75
+    %             zq(i,j) = NaN;
+    %         end
+    % 
+    %     end
+    % end
 
     % loop through points and remove based on height
-    for i = 1:100
-        for j = 1:100
-            if zq(i,j) > 151
-                zq(i,j) = NaN;
-            end
-        end
-    end
+    % for i = 1:100
+    %     for j = 1:100
+    %         if zq(i,j) > 151
+    %             zq(i,j) = NaN;
+    %         end
+    %     end
+    % end
 
 
     % create boundry mask
@@ -82,18 +82,30 @@ function clinton_elevation()
 
     % initialize water grid post water movement
     wq = 0*ones(100,100);
+    % pq = 0*ones(100,100);
+    % p2q = 0*ones(100,100);
+% 
+    % p2q(75,15) = 1;
+    
+
+    %randomly add plastic into the system
+
 
     delta_t = 1;
 
     % have to find the max elevation change of the viable water 
     %save('clinton_elevation_variables')
+    g = steepest(boundary_mask, zq);
+    for i = 1:100
+        vq = steepest_round(wq, boundary_mask,vq,g);
+        % p2q = plastic_movement(pq, boundary_mask, p2q, g);
 
-    for i = 1:60
-        vq = dance_round(wq, boundary_mask,vq);
     end
-    s = surf(xq,yq,zq);
-    s
-    % s.CData = vq;
+    figure
+    surf(xq,yq,zq,vq)
+    % figure
+    % surf(xq,yq,zq,p2q)
+
     % s
 
 end
