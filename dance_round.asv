@@ -15,7 +15,6 @@ function wq = dance_round(wq, boundary_mask, vq,g)
                     if g(i,j,1) < 0
                         % move water into new cell
                         wq(i-1,j) = wq(i-1,j) - g(i,j,1)*vq(i,j);
-                        % remove water from current cell
                         wq(i,j) = wq(i,j) + g(i,j,1)*vq(i,j);
                     end
                 end
