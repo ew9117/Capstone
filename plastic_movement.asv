@@ -1,0 +1,47 @@
+function new_pq = plastic_movement(boundary_mask, pq,g)
+    %load('clinton_elevation_variables.mat')
+
+    % initialize post movement array by copying current matrix
+    new_pq = pq;
+    [m,n] = size(boundary_mask);
+    deltaT = 1;
+    % loop through all the points
+    for i = 2:(m - 1)
+        for j = 2:(n-1)
+            % if this cell is able to hold plastic
+            if boundary_mask(i,j) == 1
+                % find most negative direction
+                [magnitude, dir] = min(g(i,j,:));
+                
+                % move north
+                if boundry_mask(i-1,j) == 1
+                    if dir == 1
+                        new_pq(i - 1, j) = new_pq(i - 1, j) - pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) + pq(i,j);
+                    end
+                end
+                % move south
+                if boundry_mask(i+1,j) == 1
+
+                    if dir == 2
+                        new_pq(i + 1, j) = new_pq(i + 1, j) - pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) + pq(i,j);
+                    end
+                end
+                % move east
+                if boundry_mask(i,j-1) == 1                
+                    if dir == 3
+                        new_pq(i, j-1) = new_pq(i, j-1) - pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) + pq(i,j);
+                    end
+                end
+                % move west
+                if dir == 4
+                    new_pq(i, j+1) = new_pq(i, j+1) - pq(i,j);
+                    new_pq(i,j) = new_pq(i,j) + pq(i,j);
+                end
+            end
+        end
+    end
+end
+                

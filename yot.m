@@ -86,6 +86,7 @@ function yot()
     % is the boundry mask says that cell can hold water there, put 1 water
     % there
     vq(bm==1) = 1;
+    
     % vq(bm==0) = 0;
 
     % vq(40,40)
@@ -101,30 +102,68 @@ function yot()
     wq(m,:) = NaN;
     wq(:,n) = NaN;
    
-    % pq = 0*ones(m,n);
-    % p2q = 0*ones(m,n);
-    % p2q(40,40) = 1;
-    g = gradient(bm,z);
+    
+    % initialize  plastic grid
+    pq = NaN*ones(size(z));
+    % if the boundary mask says the cell can hold water give the cell 0
+    % plastic
+    pq(bm==1) = 0;
+    % 62 - 140 for both axis
+    for i = 1:m+1
+        for j = 1:n+1
+            if (mod(i,5) == 0 &&  mod(j,5) == 0)
+                if (~isnan(bm(i,j)))
+                    pq(i,j) = 1;
+                end
+            end
+        end
+    end
+    [x_index, y_index] = meshgrid(1:m, 1:n);
+    % figure
+    % scatter3(x_index,y_index, pq)
+
+    
     % figure
     % surf(xq, yq, g(:,:,2));
     % g = g./3.287;
-    for a = 1:2
+
+
+
+    g = gradient(bm,z);
+    for a = 1:50
         % print the total
         sum(sum(vq(~isnan(vq))))
-        vq = dance_round(wq, bm, vq, g);
+        vq = dance_round(bm, vq, g);
+        pq = plastic_movement(bm, pq, g);
     end
     figure
-    surf(z,vq)
-    shading interp
+    surf(pq)
     figure
-    surf(vq)
-    % shading interp
-    figure 
-    surf(bm)
-    % figure;
-    % surf(xq,yq,vq);
-    % figure;
-    % surf(xq,yq,z)
+    scatter3(x_index, y_index, pq)
+
+
+    % plastic plotting purposes
+    plastic_plot = NaN*ones(size(z));
+    idx = ~isnan(pq);
+    plastic_plot(idx) = z(idx);
+
+
+    c = colormap('default');
+    scaled_pq = (pq(idx) - min(pq(idx))) / (max(pq(idx)) - min(pq(idx)));
+    color_idx = round(scaled_pq * (size(c, 1) - 1)) + 1;
+    
+    % Ensure color indices are within range
+    color_idx = max(1, min(color_idx, size(c, 1)));
+    
+    % Assign colors based on color indices
+    colors = c(color_idx, :);
+    figure
+    surf(z,vq)
+    hold on
+    shading interp
+    scatter3(x_index(idx), y_index(idx), z(idx), 36, colors, 'filled');
+    colormap('default')
+
 
 
     

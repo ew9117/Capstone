@@ -1,52 +1,46 @@
-function pq = plastic_movement(pq, boundary_mask, p2q,g)
+function new_pq = plastic_movement(boundary_mask, pq,g)
     %load('clinton_elevation_variables.mat')
-    % for now this will just move all the water into the cell with the
-    % greatest slope
+
+    % initialize post movement array by copying current matrix
+    new_pq = pq;
     [m,n] = size(boundary_mask);
+    deltaT = 1;
     % loop through all the points
     for i = 1:m
         for j = 1:n
-            % if this cell is able to hold water
+            % if this cell is able to hold plastic
             if boundary_mask(i,j) == 1
-                % if north is steepest direction
-                if g(i,j,1) == 1
-                    % if the north cell can hold water
+                % find most negative direction
+                [magnitude, dir] = min(g(i,j,:));
+                
+                % move north
+                if dir == 1
                     if boundary_mask(i-1,j) == 1
-                        pq(i-1,j) = pq(i-1,j) + p2q(i,j);
-                    else
-                        pq(i,j) = p2q(i,j);
+                        new_pq(i - 1, j) = new_pq(i - 1, j) + pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) - pq(i,j);
                     end
-                % if south is the steepest direction
-                elseif g(i,j,1) == 2
-                    % if the south cell can hold water
+                
+                % move south
+                elseif dir == 2
                     if boundary_mask(i+1,j) == 1
-                        pq(i+1,j) = pq(i+1,j) + p2q(i,j);
-                    else
-                        pq(i,j) = p2q(i,j);
+                        new_pq(i + 1, j) = new_pq(i + 1, j) + pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) - pq(i,j);
                     end
-                % if east is the steepest direction
-                elseif g(i,j,1) == 3
-                    % if the east cell can hold water
-                    if boundary_mask(i,j - 1) == 1
-                        pq(i,j - 1) = pq(i,j - 1) + p2q(i,j);
-                    else
-                        pq(i,j) = p2q(i,j);
+                
+                % move east
+                elseif dir == 3          
+                    if boundary_mask(i,j-1) == 1
+                        new_pq(i, j-1) = new_pq(i, j-1) + pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) - pq(i,j);
                     end
-                % if west is the steepest direction
-                elseif g(i,j,1) == 4
-                    % if the north cell can hold water
-                    if boundary_mask(i,j + 1) == 1
-                        pq(i,j + 1) = pq(i,j + 1) + p2q(i,j);
-                    else
-                        pq(i,j) = p2q(i,j);
+                
+                % move west
+                elseif dir == 4            
+                    if boundary_mask(i,j+1) == 1
+                        new_pq(i, j+1) = new_pq(i, j+1) + pq(i,j);
+                        new_pq(i,j) = new_pq(i,j) - pq(i,j);
                     end
                 end
-                                        
-                                        
-                                        
-
-            else
-                pq(i,j) = p2q(i,j);
             end
         end
     end

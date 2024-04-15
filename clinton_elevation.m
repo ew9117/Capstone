@@ -84,7 +84,6 @@ function clinton_elevation()
     wq = 0*ones(100,100);
     % pq = 0*ones(100,100);
     % p2q = 0*ones(100,100);
-% 
     % p2q(75,15) = 1;
     
 
@@ -95,15 +94,17 @@ function clinton_elevation()
 
     % have to find the max elevation change of the viable water 
     %save('clinton_elevation_variables')
-    g = steepest(boundary_mask, zq);
-    surf(xq,yq,g(:,:,2))
-    for i = 1:5
-        vq = steepest_round(wq, boundary_mask,vq,g);
+    g = gradient(boundary_mask, zq);
+    surf(vq)
+    for i = 1:100
+        sum(sum(vq(~isnan(vq))))
+
+        vq = dance_round(boundary_mask,vq,g);
         % p2q = plastic_movement(pq, boundary_mask, p2q, g);
 
     end
     figure
-    surf(xq,yq,zq,vq)
+    surf(vq)
     % figure
     % surf(xq,yq,zq,p2q)
 
