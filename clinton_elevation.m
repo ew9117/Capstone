@@ -104,7 +104,7 @@ function clinton_elevation()
 
     end
     figure
-    surf(vq)
+    surf(zq)
     % figure
     % surf(xq,yq,zq,p2q)
 

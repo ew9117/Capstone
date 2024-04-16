@@ -12,7 +12,7 @@ function new_pq = plastic_movement(boundary_mask, pq,g)
             if boundary_mask(i,j) == 1
                 % find most negative direction
                 [magnitude, dir] = min(g(i,j,:));
-                
+    
                 % move north
                 if dir == 1
                     if boundary_mask(i-1,j) == 1
@@ -45,4 +45,4 @@ function new_pq = plastic_movement(boundary_mask, pq,g)
         end
     end
 end
-                
+               

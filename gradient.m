@@ -8,7 +8,7 @@ function g  = gradient(boundary_mask, z)
     % alpha = 3.287370735199700;
     % alpha=3.51;
     alpha = 1;
-    dx = 0.1;
+    dx = 0.05;
 
     % i think instead of predefining an alpha I am just going to make an
     % anonymous function and solve for alpha
