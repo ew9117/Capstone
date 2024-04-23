@@ -16,7 +16,7 @@ function g  = gradient(boundary_mask, z)
     for i = 1:m
         for j = 1:n
             % if current cell can hold water
-            if boundary_mask(i,j) == 1
+            if boundary_mask(i,j) == 1 || boundary_mask(i,j) == 0
                 % north slope
                 g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/dx);
                 % south slope 

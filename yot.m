@@ -2,7 +2,7 @@ function yot()
 % this function will initialize all the maps and variables needed for thie
 % clinton elevation dataset
     
-    dx = -5:0.5:5;
+    dx = -5:0.05:5;
     dy = dx;
 
     
@@ -73,11 +73,11 @@ function yot()
             end
         end
     end
-    disp(bm)
-    figure 
-    surf(xq,yq,bm)
-    shading interp
-    colormap gray
+    % disp(bm)
+    % figure 
+    % surf(xq,yq,bm)
+    % shading interp
+    % colormap gray
     % if a cell cant hold water set its height to NaN
     z(isnan(bm)) = NaN;
     z(bm == 0) = NaN;
@@ -90,8 +90,8 @@ function yot()
     % is the boundry mask says that cell can hold water there, put 1 water
     % there
     vq(bm==1) = 1;
-    disp(vq)
-    % vq(bm==0) = 0;
+    % disp(vq)
+    vq(bm==0) = 1;
 
     % vq(40,40)
     % figure
@@ -100,35 +100,35 @@ function yot()
     % surf(vq)
 
     % initialize water grid post water movement
-    wq = 0*ones(m,n);
-    wq(1,:) = NaN;
-    wq(:,1) = NaN;
-    wq(m,:) = NaN;
-    wq(:,n) = NaN; %#ok<NASGU>
+    % wq = 0*ones(m,n);
+    % wq(1,:) = NaN;
+    % wq(:,1) = NaN;
+    % wq(m,:) = NaN;
+    % wq(:,n) = NaN; 
    
     
-    % initialize  plastic grid
-    pq = NaN*ones(size(z));
-    % if the boundary mask says the cell can hold water give the cell 0
-    % plastic
-    pq(bm==1) = 0;
-    % 62 - 140 for both axis
-    for i = 1:m+1
-        for j = 1:n+1
-            if (mod(i,5) == 0 &&  mod(j,5) == 0)
-                if (~isnan(bm(i,j)))
-                    pq(i,j) = 1;
-                end
-            end
-        end
-    end
-    [x_index, y_index] = meshgrid(1:m, 1:n);
+    % % initialize  plastic grid
+    % pq = NaN*ones(size(z));
+    % % if the boundary mask says the cell can hold water give the cell 0
+    % % plastic
+    % pq(bm==1) = 0;
+    % % 62 - 140 for both axis
+    % for i = 1:m+1
+    %     for j = 1:n+1
+    %         if (mod(i,5) == 0 &&  mod(j,5) == 0)
+    %             if (~isnan(bm(i,j)))
+    %                 pq(i,j) = 1;
+    %             end
+    %         end
+    %     end
+    % end
+    % [x_index, y_index] = meshgrid(1:m, 1:n);
     % figure
     % scatter3(x_index,y_index, pq)
 
     
-    figure
-    surf(vq);
+    % figure
+    % surf(vq);
     % g = g./3.287;
 
 
@@ -139,29 +139,31 @@ function yot()
     coord_lst = NaN*ones(200,2);
     coord_lst(1,:) = coord;
     g = gradient(bm,z);
-    for a = 2:2
+    for a = 2:4
         % print the total
         sum(sum(vq(~isnan(vq))));
-        vq = dance_round(bm, vq, g);
-        disp(bm)
-        disp(vq)
+        % vq = dance_round(bm, vq, g);
+        vq = dance_round_v2(bm,vq,g);
         water_lst(:,:,a) = vq;
         % pq = plastic_movement(bm, pq, g);
-        coord = move_plastic(coord, 0.05, vq, z);
-        coord_lst(a,:) = coord;
+        % coord = move_plastic(coord, 0.05, vq, z);
+        % coord_lst(a,:) = coord;
     end
     
-    interpolated_z = interp2(xq,yq,zq, coord_lst(:,1), coord_lst(:,2), 'linear');
-    % % disp(interpolated_z)
-    figure
-    colormap abyss
-    surf(xq,yq,z)
-    shading interp
+    % interpolated_z = interp2(xq,yq,zq, coord_lst(:,1), coord_lst(:,2), 'linear');
+    % % % disp(interpolated_z)
+    % figure
+    % colormap abyss
+    % surf(xq,yq,z)
+    % shading interp
     % hold on
     % scatter3(coord_lst(:,1), coord_lst(:,2), interpolated_z, 75, 'filled','MarkerFaceColor',[1 1 1])
     % hold off
-    % figure
-    % surf(pq)
+    figure
+    surf(z,vq)
+    shading interp
+    figure
+    surf(vq)
     % figure
     % scatter3(x_index, y_index, pq)
     
