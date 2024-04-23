@@ -1,10 +1,9 @@
-function W = dance_round(boundary_mask, V,g)
+function W = dance_round(boundary_mask, V,g, deltaT)
     % V is water location post rainfall and W is water location post
     % movement
     % initialize post movement array by copying current matrix
     W = V;
     [m,n] = size(boundary_mask);
-    deltaT = 1;
     % loop through all the points
     for i = 1:m
         for j = 1:n
@@ -68,7 +67,7 @@ function W = dance_round(boundary_mask, V,g)
                         % remove water from current cell
                         W(i,j) = W(i,j) + deltaT*g(i,j,4)*V(i,j);
                     end
-                 end
+                end
             end
         end
     end

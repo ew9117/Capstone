@@ -1,4 +1,4 @@
-function g  = gradient(boundary_mask, z)
+function g  = gradient(boundary_mask, z, alpha)
     [m,n] = size(z);
     g = NaN*ones(m,n,4);
 
@@ -7,7 +7,7 @@ function g  = gradient(boundary_mask, z)
     % alpha = 11.7376;
     % alpha = 3.287370735199700;
     % alpha=3.51;
-    alpha = 1;
+    % alpha = 1;
     dx = 0.05;
 
     % i think instead of predefining an alpha I am just going to make an

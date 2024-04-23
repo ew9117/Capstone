@@ -92,17 +92,19 @@ function gaussian()
 
 
     water_lst(:,:,1) = V;
+    % initial plastic location
     coord = [1,1];
     coord_lst = NaN*ones(200,2);
     coord_lst(1,:) = coord;
-    g = gradient(bm,z);
-
+    alpha = 1;
+    g = gradient(bm,z,alpha);
+    deltaT = 1;
     for a = 2:10
         % print the total
         sum(sum(V(~isnan(V))));
-        V = dance_round(bm,V,g);
+        V = dance_round(bm,V,g, deltaT);
         water_lst(:,:,a) = V;
-        coord = move_plastic(coord, 0.05, V, z);
+        coord = move_plastic(coord, 0.05, V, z, deltaT); 
         coord_lst(a,:) = coord;
     end
     
