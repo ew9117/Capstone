@@ -88,7 +88,8 @@ function gaussian()
     V(bm==0) = 1;
 
    
-
+    % read the rain data
+    rain = readmatrix("new_rain.csv");
 
 
     water_lst(:,:,1) = V;
@@ -102,6 +103,8 @@ function gaussian()
     for a = 2:10
         % print the total
         sum(sum(V(~isnan(V))));
+        % add rain
+        V = V + rain(a);
         V = dance_round(bm,V,g, deltaT);
         water_lst(:,:,a) = V;
         coord = move_plastic(coord, 0.05, V, z, deltaT); 
