@@ -2,10 +2,10 @@ function gaussian()
     % this function will initialize all the maps and variables needed for thie
     % clinton elevation dataset
     
-    dx = -5:0.05:5;
+    dx = -5:0.05:5; %in meters
     dy = dx;
     [xq, yq] = meshgrid(dx, dy);
-    z = -exp(-(xq.^2 + yq.^2));
+    z = -exp(-(xq.^2 + yq.^2)); %in meters
     zq = griddata(dx, dy, z, xq, yq);
 
 
@@ -88,26 +88,31 @@ function gaussian()
     V(bm==0) = 1;
 
    
-
-
+    % read the rain data
+    rain = readmatrix("jan_wks_2.csv");
+    
 
     water_lst(:,:,1) = V;
     % initial plastic location
-    coord = [1,1];
-    coord_lst = NaN*ones(200,2);
-    coord_lst(1,:) = coord;
+    n = 5; %number of pieces of plastic
+    coord = -1+ 2*rand(1,2*n); %[x(1) y(1) x(2) y(2) x(3) y(3) ... x(n) y(n)] for n number of plastic pieces
+    coord_lst = NaN*ones(200,2*n); %storages the x- and y-coordinates of the n pieces of plastic
+   coord_lst(1,:) = coord;
     alpha = 1;
     g = gradient(bm,z,alpha);
     deltaT = 1;
-    for a = 2:10
+    tic();
+    for a = 1:length(rain)
         % print the total
         sum(sum(V(~isnan(V))));
+        % add rain
+        V = V + rain(a);
         V = dance_round(bm,V,g, deltaT);
         water_lst(:,:,a) = V;
         coord = move_plastic(coord, 0.05, V, z, deltaT); 
         coord_lst(a,:) = coord;
     end
-    
+    toc();
     figure
     surf(z,V)
     title('elevation')
@@ -117,15 +122,17 @@ function gaussian()
     surf(V)
     title('water height')
     shading interp
-
-    interpolated_z = interp2(xq,yq,zq, coord_lst(:,1), coord_lst(:,2), 'linear');
-    figure
+    
+     figure
     colormap abyss
     surf(xq,yq,z)
     shading interp
     hold on
-    scatter3(coord_lst(:,1), coord_lst(:,2), interpolated_z, 50, 'filled','MarkerFaceColor',[1 1 1])
-    hold off
+    for i=1:n
+        interpolated_z = interp2(xq,yq,zq, coord_lst(:,2*(i-1)+1), coord_lst(:,2*(i-1)+2), 'linear');
+        scatter3(coord_lst(:,2*(i-1)+1), coord_lst(:,2*(i-1)+2), interpolated_z, 50, 'filled','MarkerFaceColor',[1 1 1])
+    end
+   hold off
 
 
     
