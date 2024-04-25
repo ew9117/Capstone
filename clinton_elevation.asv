@@ -103,8 +103,6 @@ function clinton_elevation()
     % is the boundry mask says that cell can hold water there, put 1 water
     % there
     V(boundary_mask == 1) = 1;
-    V(boundary_mask==0) = 1;
-
 
     % zq(isnan(boundary_mask)) = NaN;
 
@@ -119,20 +117,14 @@ function clinton_elevation()
 
     water_lst(:,:,1) = V;
 
-    coord_lst = NaN*ones(4,2,2);
-    coord_lst(1,:,1) = [1,1];
-    coord_lst(1,:,1) = [1,1];
-
-    for a = 2:4
-        sum(sum(V(~isnan(V))))
+    for i = 1:2
+        sum(sum(V(~isnan(V))));
 
         V = dance_round(boundary_mask,V,g, deltaT);
-        water_lst(:,:,a) = V;
-        figure
-        surf(zq, V)
 
     end
-
+    figure
+    surf(zq, V)
     % figure
     % surf(xq,yq,zq,p2q)
 
