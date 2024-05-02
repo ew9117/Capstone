@@ -1,4 +1,4 @@
-function g  = gradient(boundary_mask, z, alpha)
+function g  = gradient(boundary_mask, z, V, deltaX, alpha)
     [m,n] = size(z);
     g = NaN*ones(m,n,4);
 
@@ -10,21 +10,39 @@ function g  = gradient(boundary_mask, z, alpha)
     % alpha = 1;
     dx = 0.05;
 
-    % i think instead of predefining an alpha I am just going to make an
-    % anonymous function and solve for alpha
+    % I am going to try and include the water height in this output but I
+    % dont think it is going to work for some reason
 
     for i = 1:m
         for j = 1:n
             % if current cell can hold water
             if boundary_mask(i,j) == 1 || boundary_mask(i,j) == 0
                 % north slope
-                g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/dx);
+                % if boundary_mask(i,j) == 1 && boundary_mask(i-1,j) == 1
+                    % g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/deltaX) + alpha*((V(i - 1,j) - V(i,j))/deltaX);
+                % else
+                    g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/dx);
+                % end
                 % south slope 
-                g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/dx);
+                % if boundary_mask(i,j) == 1 && boundary_mask(i+1,j) == 1
+                    % g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/deltaX) + alpha*((V(i + 1,j) - V(i,j))/deltaX);
+                % else
+                    g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/dx);
+                % end
+
                 % east slope
-                g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/dx);  
+                % if boundary_mask(i,j) == 1 && boundary_mask(i,j-1) == 1
+                    % g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/deltaX) + alpha*((V(i,j - 1) - V(i,j))/deltaX);  
+                % else
+                    g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/dx);
+                % end
+
                 % west slope
-                g(i,j,4) = alpha*((z(i,j + 1) - z(i,j))/dx); 
+                % if boundary_mask(i,j) == 1 && boundary_mask(i,j+1) == 1
+                    g(i,j,4) = alpha*((z(i,j + 1) - z(i,j))/deltaX) + alpha*((V(i,j + 1) - V(i,j))/deltaX); 
+                % else 
+                %     g(i,j,4) = alpha*((z(i,j + 1) - z(i,j))/dx);
+                % end
             end
         end
     end
