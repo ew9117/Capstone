@@ -126,6 +126,10 @@ function gaussian()
         % g = gradient(bm,z,V,deltaX,alpha);
         % coord = move_plastic(coord, 0.01, V, z, deltaT); 
         % coord_lst(a,:) = coord;
+        % V = maybe(bm,V,g);
+        % water_lst(:,:,a) = V;
+        % coord = move_plastic(coord, 0.05, V, z);
+        % coord_lst(a,:) = coord;
     end
     
     % figure
