@@ -1,8 +1,8 @@
 function gaussian()
     % this function will initialize all the maps and variables needed for thie
     % clinton elevation dataset
-    deltaX = 0.25
-    dx = -3:deltaX:3;
+    deltaX = 0.05
+    dx = -5:deltaX:5;
     dy = dx;
     [xq, yq] = meshgrid(dx, dy);
     z = -exp(-(xq.^2 + yq.^2));
@@ -84,13 +84,13 @@ function gaussian()
 
     % is the boundry mask says that cell can hold water there, put 1 water
     % there
-    % V(bm==1) = 0.2;
-    V(bm==1) = 0;
+    V(bm==1) = 0.2;
+    % V(bm==1) = 0;
     % disp(V)
-    V(bm==0) = 0;  
+    % V(bm==0) = 0;  
 
-    [c,r] = coordinate_to_cell([1,1]);
-    V(c,r) = 0.2;
+    % [c,r] = coordinate_to_cell([1,1]);
+    % V(c,r) = 0.2;
 
     % disp(V)
     sum(sum(V(~isnan(V))))
@@ -107,15 +107,19 @@ function gaussian()
     coord_lst(1,:) = coord;
     alpha = 1
     g = gradient(bm,z,V,deltaX,alpha);
-    deltaT = 0.1
-    figure
-    surf(xq,yq,z, V)
-    title({'Water Movement', '0.2 Water Placed On (1,1)'});
-    subtitle('Step $0, \Delta t = 0.1, \alpha = 1$', 'Interpreter','latex')    
-    shading interp
+    deltaT = 0.01
+    % figure
+    % surf(xq,yq,z, V)
+    % title({'Water Movement', '0.2 Water Placed On (1,1)'});
+    % subtitle('Step $0, \Delta t = 0.1, \alpha = 1$', 'Interpreter','latex')    
+    % shading interp
     % size(bm==1)
     % size(V)
-    for a = 2:500
+    % figure
+    % surf(V)
+    % title('water')
+    % shading interp
+    for a = 2:2
         % print the total
         sum(sum(V(~isnan(V))));
         % V(bm==0) = sum(sum(V(~isnan(V))))/126749;
@@ -123,7 +127,7 @@ function gaussian()
         % if mod(a,50) == 0
         %     water_lst(:,:,a) = V;
         % end
-        % g = gradient(bm,z,V,deltaX,alpha);
+        g = gradient(bm,z,V,deltaX,alpha);
         % coord = move_plastic(coord, 0.01, V, z, deltaT); 
         % coord_lst(a,:) = coord;
         % V = maybe(bm,V,g);
@@ -132,21 +136,37 @@ function gaussian()
         % coord_lst(a,:) = coord;
     end
     
-    % figure
-    % surf(z)
-    % title('elevation')
-    % shading interp
+    figure
+    surf(xq,yq,V)
+    title('water height')
+    subtitle('Step $1, \Delta t = 0.01, \alpha = 1$', 'Interpreter','latex')
+    colormap abyss
+    shading interp
 
     figure
     surf(xq,yq,z, V)
-    title({'Water Movement', '0.2 Water Placed On (1,1)'});
-    subtitle('Step $450, \Delta t = 0.1, \alpha = 1$', 'Interpreter','latex')
+    title('gaussian height')
+    subtitle('Step $1, \Delta t = 0.01, \alpha = 1$', 'Interpreter','latex')
+    colormap abyss
+   
+    
+    
+    % title({'Water Movement', '0.2 Water Placed On (1,1)'});
+    % subtitle('Step $450, \Delta t = 0.1, \alpha = 1$', 'Interpreter','latex')
     shading interp
 
+    figure 
+    surf(xq,yq, V + z)
+    title('gaussian height + water height')
+    subtitle('Step $1, \Delta t = 0.01, \alpha = 1$', 'Interpreter','latex')
+    colormap abyss
+    
+    
+    shading interp
     % figure
     % surf(g(:,:,1))
     % shading interp
-    % 
+    % % 
     % figure
     % surf(V + z)
     % shading interp

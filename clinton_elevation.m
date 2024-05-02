@@ -216,9 +216,13 @@ function clinton_elevation()
     % disp(ugh)
     figure
     surf(zq)
+    colormap abyss
+    
     shading interp
     figure 
     surf(temp2)
+    colormap abyss
+
     shading interp
     for i = 1:m
         for j = 80:170
@@ -229,6 +233,7 @@ function clinton_elevation()
     end    
     figure 
     surf(temp_interp)
+    colormap abyss
     shading interp
 
     

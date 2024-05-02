@@ -19,22 +19,22 @@ function g  = gradient(boundary_mask, z, V, deltaX, alpha)
             if boundary_mask(i,j) == 1 || boundary_mask(i,j) == 0
                 % north slope
                 % if boundary_mask(i,j) == 1 && boundary_mask(i-1,j) == 1
-                    % g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/deltaX) + alpha*((V(i - 1,j) - V(i,j))/deltaX);
+                    g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/deltaX) + alpha*((V(i - 1,j) - V(i,j))/deltaX);
                 % else
-                    g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/dx);
+                    % g(i,j,1) = alpha*((z(i - 1,j) - z(i,j))/dx);
                 % end
                 % south slope 
                 % if boundary_mask(i,j) == 1 && boundary_mask(i+1,j) == 1
-                    % g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/deltaX) + alpha*((V(i + 1,j) - V(i,j))/deltaX);
+                    g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/deltaX) + alpha*((V(i + 1,j) - V(i,j))/deltaX);
                 % else
-                    g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/dx);
+                    % g(i,j,2) = alpha*((z(i + 1,j) - z(i,j))/dx);
                 % end
 
                 % east slope
                 % if boundary_mask(i,j) == 1 && boundary_mask(i,j-1) == 1
-                    % g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/deltaX) + alpha*((V(i,j - 1) - V(i,j))/deltaX);  
+                    g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/deltaX) + alpha*((V(i,j - 1) - V(i,j))/deltaX);  
                 % else
-                    g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/dx);
+                    % g(i,j,3) = alpha*((z(i,j - 1) - z(i,j))/dx);
                 % end
 
                 % west slope
